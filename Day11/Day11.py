@@ -1,5 +1,8 @@
 import re
+from functools import reduce
 
+
+totalDivisibleNum = 0
 
 def problemOne():
     with open("input.txt", "r") as f:
@@ -60,8 +63,11 @@ def problemTwo():
             Monkey(startingItems, operationText, divisibleNum, trueMonk, falseMonk)
         )
 
+    global totalDivisibleNum
+    totalDivisibleNum = reduce(lambda a, b: a * b, [monkey.divisibleNum for monkey in monkeys])
+
     for i in range(0, 10000):
-        print(i)
+        # print(i)
         for monkey in monkeys:
             monkey.actionProblemTwo(monkeys)
 
@@ -128,7 +134,7 @@ class Monkey:
     def actionProblemTwo(self, monkeys):
         while len(self.items) > 0:
             self.inspectedNum += 1
-            worryLevel = self.operationFunction(self.items.pop(0))
+            worryLevel = self.operationFunction(self.items.pop(0)) % totalDivisibleNum
 
             if worryLevel % self.divisibleNum == 0:
                 monkeys[self.trueMonk].addItem(worryLevel)
